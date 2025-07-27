@@ -22,13 +22,24 @@ export const registerUserController = async (req, res) => {
 };
 
 export const loginUserController = async (req, res) => {
-  const { accessToken, refreshToken } = await loginUserService(req.body);
+  const { accessToken, refreshToken, sessionId } = await loginUserService(
+    req.body,
+  );
 
+  // Встановлення refreshToken
   res.cookie('refreshToken', refreshToken, {
     httpOnly: true,
     secure: true,
     sameSite: 'strict',
-    maxAge: 30 * 24 * 60 * 60 * 1000,
+    maxAge: THIRTY_DAY,
+  });
+
+  // Встановлення sessionId
+  res.cookie('sessionId', sessionId, {
+    httpOnly: true,
+    secure: true,
+    sameSite: 'strict',
+    maxAge: THIRTY_DAY,
   });
 
   res.status(200).json({
@@ -48,8 +59,14 @@ export const logoutUserController = async (req, res) => {
 
   await logoutUserService(refreshToken);
 
-  // Очищаємо кукі з рефреш токеном
+  // Очищаємо куки
   res.clearCookie('refreshToken', {
+    httpOnly: true,
+    secure: true,
+    sameSite: 'strict',
+  });
+
+  res.clearCookie('sessionId', {
     httpOnly: true,
     secure: true,
     sameSite: 'strict',
@@ -57,14 +74,19 @@ export const logoutUserController = async (req, res) => {
 
   res.sendStatus(204);
 };
-////////
+
 const setupSession = (res, session) => {
   res.cookie('refreshToken', session.refreshToken, {
     httpOnly: true,
+    secure: true,
+    sameSite: 'strict',
     expires: new Date(Date.now() + THIRTY_DAY),
   });
-  res.cookie('sessionId', session._id, {
+
+  res.cookie('sessionId', session._id.toString(), {
     httpOnly: true,
+    secure: true,
+    sameSite: 'strict',
     expires: new Date(Date.now() + THIRTY_DAY),
   });
 };
