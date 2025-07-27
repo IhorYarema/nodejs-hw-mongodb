@@ -48,19 +48,16 @@ export const loginUserService = async ({ email, password }) => {
   // Видаляємо попередню сесію
   await SessionsCollection.findOneAndDelete({ userId: user._id });
 
-  // Генерація токенів
+  // Створюємо токени
   const payload = { id: user._id };
   const accessToken = jwt.sign(payload, ACCESS_SECRET, { expiresIn: '15m' });
   const refreshToken = jwt.sign(payload, REFRESH_SECRET, { expiresIn: '30d' });
 
-  // Визначаємо час дії токенів
-  const accessTokenValidUntil = new Date(Date.now() + 15 * 60 * 1000); // 15 хвилин
-  const refreshTokenValidUntil = new Date(
-    Date.now() + 30 * 24 * 60 * 60 * 1000,
-  ); // 30 днів
+  const accessTokenValidUntil = new Date(Date.now() + FIFTEEN_MINUTES);
+  const refreshTokenValidUntil = new Date(Date.now() + THIRTY_DAY);
 
-  // Створюємо нову сесію
-  await SessionsCollection.create({
+  // Створюємо сесію
+  const session = await SessionsCollection.create({
     userId: user._id,
     accessToken,
     refreshToken,
@@ -68,7 +65,11 @@ export const loginUserService = async ({ email, password }) => {
     refreshTokenValidUntil,
   });
 
-  return { accessToken, refreshToken };
+  return {
+    accessToken,
+    refreshToken,
+    sessionId: session._id.toString(),
+  };
 };
 
 export const logoutUserService = async (refreshToken) => {
