@@ -5,6 +5,8 @@ import { SessionsCollection } from '../db/session.js';
 import jwt from 'jsonwebtoken';
 import { FIFTEEN_MINUTES, THIRTY_DAY } from '../constants/index.js';
 import { randomBytes } from 'crypto';
+import { getEnvVar } from '../utils/getEnvVar.js';
+import { sendEmail } from '../utils/sendMail.js';
 
 export const registerUserService = async ({ name, email, password }) => {
   const existingUser = await UsersCollection.findOne({ email });
@@ -113,5 +115,37 @@ export const refreshUsersSession = async ({ sessionId, refreshToken }) => {
   return await SessionsCollection.create({
     userId: session.userId,
     ...newSession,
+  });
+};
+
+////email
+
+export const requestResetToken = async (email) => {
+  const user = await UsersCollection.findOne({ email });
+  if (!user) {
+    throw createHttpError(404, 'User not found!');
+  }
+
+  const resetToken = jwt.sign(
+    {
+      sub: user._id.toString(),
+      email,
+    },
+    getEnvVar('JWT_SECRET'),
+    {
+      expiresIn: '5m',
+    },
+  );
+
+  const appDomain = getEnvVar('APP_DOMAIN');
+
+  const resetLink = `https://${appDomain}/reset-password?token=${resetToken}
+`;
+
+  await sendEmail({
+    from: getEnvVar('SMTP_FROM'),
+    to: email,
+    subject: 'Reset your password',
+    html: `<p>Click <a href="${resetLink}">here</a> to reset your password!</p>`,
   });
 };
