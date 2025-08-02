@@ -4,6 +4,7 @@ import {
   logoutUserService,
   refreshUsersSession,
   requestResetToken,
+  resetPassword,
 } from '../services/auth.js';
 
 import { THIRTY_DAY } from '../constants/index.js';
@@ -23,11 +24,8 @@ export const registerUserController = async (req, res) => {
 };
 
 export const loginUserController = async (req, res) => {
-  const { accessToken, refreshToken, sessionId } = await loginUserService(
-    req.body,
-  );
+  const { accessToken, refreshToken } = await loginUserService(req.body);
 
-  // Встановлення refreshToken
   res.cookie('refreshToken', refreshToken, {
     httpOnly: true,
     secure: true,
@@ -35,8 +33,7 @@ export const loginUserController = async (req, res) => {
     maxAge: THIRTY_DAY,
   });
 
-  // Встановлення sessionId
-  res.cookie('sessionId', sessionId, {
+  res.cookie('sessionId', accessToken, {
     httpOnly: true,
     secure: true,
     sameSite: 'strict',
@@ -120,11 +117,11 @@ export const requestResetEmailController = async (req, res) => {
   });
 };
 
-// export const resetPasswordController = async (req, res) => {
-//   await resetPassword(req.body);
-//   res.json({
-//     message: 'Password was successfully reset!',
-//     status: 200,
-//     data: {},
-//   });
-// };
+export const resetPasswordController = async (req, res) => {
+  await resetPassword(req.body);
+  res.json({
+    message: 'Password was successfully reset!',
+    status: 200,
+    data: {},
+  });
+};

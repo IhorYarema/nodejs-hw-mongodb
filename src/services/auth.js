@@ -121,31 +121,69 @@ export const refreshUsersSession = async ({ sessionId, refreshToken }) => {
 ////email
 
 export const requestResetToken = async (email) => {
-  const user = await UsersCollection.findOne({ email });
-  if (!user) {
-    throw createHttpError(404, 'User not found!');
+  try {
+    const user = await UsersCollection.findOne({ email });
+    if (!user) {
+      throw createHttpError(404, 'User not found!');
+    }
+
+    const resetToken = jwt.sign(
+      {
+        sub: user._id.toString(),
+        email,
+      },
+      getEnvVar('JWT_SECRET'),
+      {
+        expiresIn: '5m',
+      },
+    );
+
+    const appDomain = getEnvVar('APP_DOMAIN');
+
+    const resetLink = `${appDomain}/reset-password?token=${resetToken}`;
+
+    await sendEmail({
+      from: getEnvVar('SMTP_FROM'),
+      to: email,
+      subject: 'Reset your password',
+      html: `<p>Click <a href="${resetLink}">here</a> to reset your password!</p>`,
+    });
+  } catch (error) {
+    if (!error.status) {
+      throw createHttpError(
+        500,
+        error.message || 'Something went wrong while sending reset email',
+      );
+    }
+    throw error;
+  }
+};
+
+///reset PSW
+export const resetPassword = async (payload) => {
+  let entries;
+
+  try {
+    entries = jwt.verify(payload.token, getEnvVar('JWT_SECRET'));
+  } catch (err) {
+    if (err instanceof Error)
+      throw createHttpError(401, 'Token is expired or invalid.');
+    throw err;
   }
 
-  const resetToken = jwt.sign(
-    {
-      sub: user._id.toString(),
-      email,
-    },
-    getEnvVar('JWT_SECRET'),
-    {
-      expiresIn: '5m',
-    },
-  );
-
-  const appDomain = getEnvVar('APP_DOMAIN');
-
-  const resetLink = `https://${appDomain}/reset-password?token=${resetToken}
-`;
-
-  await sendEmail({
-    from: getEnvVar('SMTP_FROM'),
-    to: email,
-    subject: 'Reset your password',
-    html: `<p>Click <a href="${resetLink}">here</a> to reset your password!</p>`,
+  const user = await UsersCollection.findOne({
+    email: entries.email,
+    _id: entries.sub,
   });
+
+  if (!user) {
+    throw createHttpError(404, 'User not found');
+  }
+
+  const encryptedPassword = await bcrypt.hash(payload.password, 10);
+
+  await UsersCollection.updateOne(
+    { _id: user._id },
+    { password: encryptedPassword },
+  );
 };

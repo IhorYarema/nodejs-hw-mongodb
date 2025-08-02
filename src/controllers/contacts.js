@@ -9,6 +9,7 @@ import createHttpError from 'http-errors';
 import { parsePaginationParams } from '../utils/parsePaginationParams.js';
 import { parseSortParams } from '../utils/parseSortParams.js';
 import { parseFilterParams } from '../utils/parseFilterParams.js';
+import { saveFileToUploadDir } from '../utils/saveFileToUploadDir.js';
 
 export const getContactsController = async (req, res) => {
   const { page, perPage } = parsePaginationParams(req.query);
@@ -69,9 +70,40 @@ export const createContactController = async (req, res) => {
   });
 };
 
+// export const patchContactController = async (req, res) => {
+//   const { contactId } = req.params;
+//   const updateData = req.body;
+//   const photo = req.file;
+
+//   let photoUrl;
+
+//   if (photo) {
+//     photoUrl = await saveFileToUploadDir(photo);
+//   }
+
+//   const updated = await updateContact(contactId, updateData, req.user._id, {
+//     photo: photoUrl,
+//   });
+
+//   if (!updated) {
+//     throw createHttpError(404, 'Contact not found');
+//   }
+
+//   res.status(200).json({
+//     status: 200,
+//     message: 'Successfully patched a contact!',
+//     data: updated,
+//   });
+// };
 export const patchContactController = async (req, res) => {
   const { contactId } = req.params;
   const updateData = req.body;
+  const photo = req.file;
+
+  if (photo) {
+    const photoUrl = await saveFileToUploadDir(photo); // переміщає файл у "uploads/"
+    updateData.photo = photoUrl;
+  }
 
   const updated = await updateContact(contactId, updateData, req.user._id);
 
@@ -81,7 +113,7 @@ export const patchContactController = async (req, res) => {
 
   res.status(200).json({
     status: 200,
-    message: 'Successfully patched a contact!',
+    message: 'Successfully patched a contact!!',
     data: updated,
   });
 };
