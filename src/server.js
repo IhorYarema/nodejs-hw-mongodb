@@ -6,6 +6,7 @@ import { errorHandler } from './middlewares/errorHandler.js';
 import { notFoundHandler } from './middlewares/notFoundHandler.js';
 import authRoutes from './routes/auth.js';
 import cookieParser from 'cookie-parser';
+import { UPLOAD_DIR } from './constants/index.js';
 
 export const setupServer = () => {
   const PORT = process.env.PORT || 3000;
@@ -32,11 +33,10 @@ export const setupServer = () => {
   app.use(express.json());
 
   app.use('/auth', authRoutes);
-
   app.use('/contacts', contactRoutes);
+  app.use('/uploads', express.static(UPLOAD_DIR));
 
   app.use(notFoundHandler);
-
   app.use(errorHandler);
 
   app.listen(PORT, (error) => {
@@ -44,6 +44,6 @@ export const setupServer = () => {
       throw error;
     }
 
-    console.log(`Server is running on port ${PORT}`);
+    console.log(`🚀 Server is running on port ${PORT}`);
   });
 };
