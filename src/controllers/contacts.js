@@ -50,6 +50,27 @@ export const getContactByIdController = async (req, res) => {
   });
 };
 
+// export const createContactController = async (req, res) => {
+//   const { name, phoneNumber, email, isFavourite, contactType } = req.body;
+
+//   if (!name || !phoneNumber || !contactType) {
+//     throw createHttpError(
+//       400,
+//       'Missing required fields: name, phoneNumber, or contactType',
+//     );
+//   }
+
+//   const contact = await createContact(
+//     { name, phoneNumber, email, isFavourite, contactType },
+//     req.user._id,
+//   );
+
+//   res.status(201).json({
+//     status: 201,
+//     message: 'Successfully created a contact!',
+//     data: contact,
+//   });
+// };
 export const createContactController = async (req, res) => {
   const { name, phoneNumber, email, isFavourite, contactType } = req.body;
 
@@ -60,8 +81,26 @@ export const createContactController = async (req, res) => {
     );
   }
 
+  const photo = req.file;
+  let photoUrl;
+
+  if (photo) {
+    if (getEnvVar('ENABLE_CLOUDINARY') === 'true') {
+      photoUrl = await saveFileToCloudinary(photo);
+    } else {
+      photoUrl = await saveFileToUploadDir(photo);
+    }
+  }
+
   const contact = await createContact(
-    { name, phoneNumber, email, isFavourite, contactType },
+    {
+      name,
+      phoneNumber,
+      email,
+      isFavourite,
+      contactType,
+      photo: photoUrl,
+    },
     req.user._id,
   );
 
