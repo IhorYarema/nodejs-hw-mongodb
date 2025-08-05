@@ -60,10 +60,8 @@ export const updateContact = async (
     { new: true, includeResultMetadata: true, ...options },
   );
   if (!rawResult || !rawResult.value) return null;
-  return {
-    contact: rawResult.value,
-    isNew: Boolean(rawResult?.lastErrorObject.upserted),
-  };
+
+  return rawResult.value;
 };
 
 export const deleteContact = async (contactId, userId) => {
