@@ -7,11 +7,19 @@ import { notFoundHandler } from './middlewares/notFoundHandler.js';
 import authRoutes from './routes/auth.js';
 import cookieParser from 'cookie-parser';
 import { UPLOAD_DIR } from './constants/index.js';
+import swaggerUi from 'swagger-ui-express';
+import fs from 'fs';
 
 export const setupServer = () => {
   const PORT = process.env.PORT || 3000;
 
   const app = express();
+
+  // Swagger UI
+  const swaggerDocument = JSON.parse(
+    fs.readFileSync('./docs/swagger.json', 'utf-8'),
+  );
+  app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
   app.use(
     cors({

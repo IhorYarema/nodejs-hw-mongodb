@@ -1,0 +1,32 @@
+tags:
+  - Contacts
+summary: Update a contact
+operationId: updateContact
+description: Updates data for an existing contact
+security:
+  - bearerAuth: []
+parameters:
+  - name: contactId
+    in: path
+    required: true
+    schema:
+      type: string
+requestBody:
+  required: true
+  content:
+    application/json:
+      schema:
+        $ref: '../../../components/schemas/ContactInput.yaml'
+responses:
+  '200':
+    description: Contact updated successfully
+    content:
+      application/json:
+        schema:
+          $ref: '../../../components/schemas/Contact.yaml'
+  '400':
+    $ref: '../../../components/responses/ValidationError.yaml'
+  '401':
+    $ref: '../../../components/responses/Unauthorized.yaml'
+  '404':
+    $ref: '../../../components/responses/NotFound.yaml'

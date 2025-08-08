@@ -1,0 +1,11 @@
+type: object
+properties:
+  email:
+    type: string
+    example: user@example.com
+  password:
+    type: string
+    example: StrongPass123
+required:
+  - email
+  - password
