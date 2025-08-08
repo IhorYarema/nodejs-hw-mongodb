@@ -1,0 +1,29 @@
+tags:
+  - Authentication
+summary: Log in a user
+operationId: loginUser
+description: Authenticates a user and returns a token
+security:
+  - bearerAuth: []
+requestBody:
+  required: true
+  content:
+    application/json:
+      schema:
+        $ref: '../../components/schemas/LoginInput.yaml'
+responses:
+  '200':
+    description: Successfully logged in
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            token:
+              type: string
+            user:
+              $ref: '../../components/schemas/User.yaml'
+  '400':
+    $ref: '../../components/responses/ValidationError.yaml'
+  '401':
+    $ref: '../../components/responses/Unauthorized.yaml'

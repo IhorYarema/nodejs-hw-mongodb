@@ -1,0 +1,36 @@
+tags:
+  - Contacts
+summary: Get all contacts
+operationId: getContacts
+description: Returns a list of all user contacts
+security:
+  - bearerAuth: []
+parameters:
+  - name: page
+    in: query
+    description: Page number for pagination
+    schema:
+      type: integer
+      default: 1
+  - name: limit
+    in: query
+    description: Number of contacts per page
+    schema:
+      type: integer
+      default: 20
+  - name: favorite
+    in: query
+    description: Filter by favorite contacts
+    schema:
+      type: boolean
+responses:
+  '200':
+    description: Successfully retrieved list of contacts
+    content:
+      application/json:
+        schema:
+          type: array
+          items:
+            $ref: '../../components/schemas/Contact.yaml'
+  '401':
+    $ref: '../../components/responses/Unauthorized.yaml'

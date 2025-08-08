@@ -1,0 +1,16 @@
+type: object
+properties:
+  id:
+    type: string
+    example: 64b9b7f5e4a6c9e1a7654321
+  email:
+    type: string
+    example: user@example.com
+  subscription:
+    type: string
+    enum: [starter, pro, business]
+    example: starter
+required:
+  - id
+  - email
+  - subscription

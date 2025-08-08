@@ -1,0 +1,22 @@
+type: object
+properties:
+  id:
+    type: string
+    example: 64b9b7f5e4a6c9e1a1234567
+  name:
+    type: string
+    example: John Doe
+  email:
+    type: string
+    example: johndoe@example.com
+  phone:
+    type: string
+    example: +123456789
+  favorite:
+    type: boolean
+    example: true
+required:
+  - id
+  - name
+  - email
+  - phone
