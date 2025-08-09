@@ -1,22 +1,47 @@
 type: object
 properties:
-  id:
+  _id:
     type: string
-    example: 64b9b7f5e4a6c9e1a1234567
+    example: 66b8c02c645d7da6a56fba5f
   name:
     type: string
     example: John Doe
-  email:
-    type: string
-    example: johndoe@example.com
-  phone:
+  phoneNumber:
     type: string
     example: +123456789
-  favorite:
+  email:
+    type: string
+    example: john@example.com
+  isFavourite:
     type: boolean
-    example: true
+    example: false
+  contactType:
+    type: string
+    enum:
+      - work
+      - home
+      - personal
+    example: personal
+  userId:
+    type: string
+    example: 66b8bfec645d7da6a56fba5d
+  photo:
+    type: string
+    example: uploads/john-doe.jpg
+  createdAt:
+    type: string
+    format: date-time
+    example: 2025-08-09T10:15:30.000Z
+  updatedAt:
+    type: string
+    format: date-time
+    example: 2025-08-09T10:15:30.000Z
 required:
-  - id
+  - _id
   - name
-  - email
-  - phone
+  - phoneNumber
+  - isFavourite
+  - contactType
+  - userId
+  - createdAt
+  - updatedAt

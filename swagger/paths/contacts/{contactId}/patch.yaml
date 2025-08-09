@@ -1,8 +1,8 @@
 tags:
   - Contacts
-summary: Update a contact
+summary: Update an existing contact
 operationId: updateContact
-description: Updates data for an existing contact
+description: Updates a contact by ID. The request body must be sent as multipart/form-data.
 security:
   - bearerAuth: []
 parameters:
@@ -14,19 +14,30 @@ parameters:
 requestBody:
   required: true
   content:
-    application/json:
+    multipart/form-data:
       schema:
-        $ref: '../../../components/schemas/ContactInput.yaml'
+        type: object
+        properties:
+          name:
+            type: string
+            example: Jane Doe
+          email:
+            type: string
+            format: email
+            example: jane@example.com
+          phone:
+            type: string
+            example: '+1-202-555-0178'
+          photo:
+            type: string
+            format: binary
+            description: New contact profile picture
 responses:
   '200':
-    description: Contact updated successfully
+    description: Contact successfully updated
     content:
       application/json:
         schema:
-          $ref: '../../../components/schemas/Contact.yaml'
-  '400':
-    $ref: '../../../components/responses/ValidationError.yaml'
-  '401':
-    $ref: '../../../components/responses/Unauthorized.yaml'
+          $ref: ../../../components/schemas/Contact.yaml
   '404':
     $ref: '../../../components/responses/NotFound.yaml'

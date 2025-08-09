@@ -2,23 +2,36 @@ tags:
   - Contacts
 summary: Create a new contact
 operationId: createContact
-description: Adds a new contact to the user's list
+description: Creates a new contact. The request body must be sent as multipart/form-data.
 security:
   - bearerAuth: []
 requestBody:
   required: true
   content:
-    application/json:
+    multipart/form-data:
       schema:
-        $ref: '../../components/schemas/ContactInput.yaml'
+        type: object
+        properties:
+          name:
+            type: string
+            example: John Doe
+          email:
+            type: string
+            format: email
+            example: john@example.com
+          phone:
+            type: string
+            example: '+1-202-555-0147'
+          photo:
+            type: string
+            format: binary
+            description: Contact profile picture
 responses:
   '201':
-    description: Contact created successfully
+    description: Contact successfully created
     content:
       application/json:
         schema:
           $ref: '../../components/schemas/Contact.yaml'
   '400':
-    $ref: '../../components/responses/ValidationError.yaml'
-  '401':
-    $ref: '../../components/responses/Unauthorized.yaml'
+    $ref: '../../components/responses/BadRequest.yaml'
