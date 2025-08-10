@@ -6,14 +6,18 @@ info:
     name: Apache 2.0
     url: http://www.apache.org/licenses/LICENSE-2.0.html
   description: API for managing contacts and user authentication
+
 tags:
   - name: Contacts
     description: Operations related to contacts
   - name: Auth
     description: User authentication and authorization
+
 servers:
   - url: http://localhost:3000
+    description: Local development server
   - url: https://nodejs-hw-mongodb-k4lk.onrender.com
+    description: Production server
 
 paths:
   /contacts/{contactId}:

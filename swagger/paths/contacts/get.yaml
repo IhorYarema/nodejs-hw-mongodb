@@ -21,13 +21,14 @@ parameters:
       type: integer
       minimum: 1
       maximum: 100
-      default: 20
+      default: 10
     description: Number of contacts per page.
   - name: sortBy
     in: query
     required: false
     schema:
       type: string
+      example: createdAt
     description: Field name to sort by.
   - name: sortOrder
     in: query

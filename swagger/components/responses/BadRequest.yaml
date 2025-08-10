@@ -13,8 +13,8 @@ content:
           example: 400
         message:
           type: string
-          example: Bad request
+          example: Bad Request
         data:
           type: object
-          description: Details about the bad request or validation errors
+          description: Validation details or error payload
           example: {}

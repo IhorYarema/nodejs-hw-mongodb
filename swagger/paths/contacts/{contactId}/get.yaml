@@ -28,7 +28,7 @@ responses:
               example: 200
             message:
               type: string
-              example: Successfully found contact with id 123
+              example: Successfully found contact!
             data:
               $ref: '../../../components/schemas/Contact.yaml'
   '401':
