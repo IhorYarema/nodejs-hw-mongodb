@@ -1,3 +1,4 @@
+# components/schemas/ContactsResponse.yaml
 type: object
 properties:
   status:
@@ -9,7 +10,7 @@ properties:
   data:
     type: array
     items:
-      $ref: './Contact.yaml'
+      $ref: './Contact.yaml' # посилання на файл Contact.yaml (твій контакт)
   pagination:
     type: object
     properties:
@@ -25,6 +26,19 @@ properties:
       totalPages:
         type: integer
         example: 5
+      hasNextPage:
+        type: boolean
+        example: false
+      hasPreviousPage:
+        type: boolean
+        example: false
+    required:
+      - page
+      - perPage
+      - totalItems
+      - totalPages
+      - hasNextPage
+      - hasPreviousPage
 required:
   - status
   - message

@@ -16,42 +16,6 @@ responses:
     description: Contact deleted successfully, no content returned
     content: {}
   '401':
-    description: Unauthorized
-    content:
-      application/json:
-        schema:
-          type: object
-          required:
-            - status
-            - message
-            - data
-          properties:
-            status:
-              type: integer
-              example: 401
-            message:
-              type: string
-              example: Unauthorized
-            data:
-              type: object
-              description: Additional error details (optional)
+    $ref: '../../../components/responses/Unauthorized.yaml'
   '404':
-    description: Contact not found
-    content:
-      application/json:
-        schema:
-          type: object
-          required:
-            - status
-            - message
-            - data
-          properties:
-            status:
-              type: integer
-              example: 404
-            message:
-              type: string
-              example: Contact not found
-            data:
-              type: object
-              description: Details about missing resource (optional)
+    $ref: '../../../components/responses/NotFound.yaml'

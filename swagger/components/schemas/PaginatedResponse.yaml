@@ -25,6 +25,12 @@ properties:
       totalPages:
         type: integer
         example: 5
+      hasNextPage:
+        type: boolean
+        example: true
+      hasPreviousPage:
+        type: boolean
+        example: false
 required:
   - status
   - message

@@ -56,46 +56,10 @@ responses:
               example: 200
             message:
               type: string
-              example: Successfully patched a contact!!
+              example: Successfully updated a contact!
             data:
               $ref: '../../../components/schemas/Contact.yaml'
   '400':
-    description: Bad Request
-    content:
-      application/json:
-        schema:
-          type: object
-          required:
-            - status
-            - message
-            - data
-          properties:
-            status:
-              type: integer
-              example: 400
-            message:
-              type: string
-              example: Bad Request
-            data:
-              type: object
-              description: Details of the validation error or bad input
+    $ref: '../../../components/responses/BadRequest.yaml'
   '404':
-    description: Contact not found
-    content:
-      application/json:
-        schema:
-          type: object
-          required:
-            - status
-            - message
-            - data
-          properties:
-            status:
-              type: integer
-              example: 404
-            message:
-              type: string
-              example: Contact not found
-            data:
-              type: object
-              description: Empty or details about missing resource
+    $ref: '../../../components/responses/NotFound.yaml'
