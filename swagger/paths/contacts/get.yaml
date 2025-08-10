@@ -54,7 +54,6 @@ responses:
             - status
             - message
             - data
-            - pagination
           properties:
             status:
               type: integer
@@ -63,12 +62,20 @@ responses:
               type: string
               example: Successfully found contacts!
             data:
-              type: array
-              items:
-                $ref: '../../components/schemas/Contact.yaml'
-            pagination:
               type: object
+              required:
+                - data
+                - page
+                - perPage
+                - totalItems
+                - totalPages
+                - hasNextPage
+                - hasPreviousPage
               properties:
+                data:
+                  type: array
+                  items:
+                    $ref: '../../components/schemas/Contact.yaml'
                 page:
                   type: integer
                   example: 1
@@ -81,5 +88,11 @@ responses:
                 totalPages:
                   type: integer
                   example: 5
+                hasNextPage:
+                  type: boolean
+                  example: false
+                hasPreviousPage:
+                  type: boolean
+                  example: false
   '401':
     $ref: '../../components/responses/Unauthorized.yaml'
