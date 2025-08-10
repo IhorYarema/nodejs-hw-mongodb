@@ -25,9 +25,16 @@ requestBody:
             type: string
             format: email
             example: jane@example.com
-          phone:
+          phoneNumber:
             type: string
             example: '+1-202-555-0178'
+          isFavourite:
+            type: boolean
+            example: true
+          contactType:
+            type: string
+            enum: [work, home, personal]
+            example: work
           photo:
             type: string
             format: binary
@@ -38,6 +45,57 @@ responses:
     content:
       application/json:
         schema:
-          $ref: ../../../components/schemas/Contact.yaml
+          type: object
+          required:
+            - status
+            - message
+            - data
+          properties:
+            status:
+              type: integer
+              example: 200
+            message:
+              type: string
+              example: Successfully patched a contact!!
+            data:
+              $ref: '../../../components/schemas/Contact.yaml'
+  '400':
+    description: Bad Request
+    content:
+      application/json:
+        schema:
+          type: object
+          required:
+            - status
+            - message
+            - data
+          properties:
+            status:
+              type: integer
+              example: 400
+            message:
+              type: string
+              example: Bad Request
+            data:
+              type: object
+              description: Details of the validation error or bad input
   '404':
-    $ref: '../../../components/responses/NotFound.yaml'
+    description: Contact not found
+    content:
+      application/json:
+        schema:
+          type: object
+          required:
+            - status
+            - message
+            - data
+          properties:
+            status:
+              type: integer
+              example: 404
+            message:
+              type: string
+              example: Contact not found
+            data:
+              type: object
+              description: Empty or details about missing resource

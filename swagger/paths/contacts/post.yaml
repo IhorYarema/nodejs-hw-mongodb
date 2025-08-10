@@ -19,19 +19,43 @@ requestBody:
             type: string
             format: email
             example: john@example.com
-          phone:
+          phoneNumber:
             type: string
             example: '+1-202-555-0147'
+          isFavourite:
+            type: boolean
+            example: false
+          contactType:
+            type: string
+            enum: [work, home, personal]
+            example: personal
           photo:
             type: string
             format: binary
             description: Contact profile picture
+        required:
+          - name
+          - phoneNumber
+          - contactType
 responses:
   '201':
     description: Contact successfully created
     content:
       application/json:
         schema:
-          $ref: '../../components/schemas/Contact.yaml'
+          type: object
+          required:
+            - status
+            - message
+            - data
+          properties:
+            status:
+              type: integer
+              example: 201
+            message:
+              type: string
+              example: Contact successfully created!
+            data:
+              $ref: '../../components/schemas/Contact.yaml'
   '400':
     $ref: '../../components/responses/BadRequest.yaml'

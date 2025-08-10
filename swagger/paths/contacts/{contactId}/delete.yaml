@@ -12,17 +12,46 @@ parameters:
     schema:
       type: string
 responses:
-  '200':
-    description: Contact deleted successfully
+  '204':
+    description: Contact deleted successfully, no content returned
+    content: {}
+  '401':
+    description: Unauthorized
     content:
       application/json:
         schema:
           type: object
+          required:
+            - status
+            - message
+            - data
           properties:
+            status:
+              type: integer
+              example: 401
             message:
               type: string
-              example: Contact deleted successfully
-  '401':
-    $ref: '../../../components/responses/Unauthorized.yaml'
+              example: Unauthorized
+            data:
+              type: object
+              description: Additional error details (optional)
   '404':
-    $ref: '../../../components/responses/NotFound.yaml'
+    description: Contact not found
+    content:
+      application/json:
+        schema:
+          type: object
+          required:
+            - status
+            - message
+            - data
+          properties:
+            status:
+              type: integer
+              example: 404
+            message:
+              type: string
+              example: Contact not found
+            data:
+              type: object
+              description: Details about missing resource (optional)
