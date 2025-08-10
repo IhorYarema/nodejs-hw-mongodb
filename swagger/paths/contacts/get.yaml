@@ -49,6 +49,37 @@ responses:
     content:
       application/json:
         schema:
-          $ref: '../../components/schemas/PaginatedResponse.yaml'
+          type: object
+          required:
+            - status
+            - message
+            - data
+            - pagination
+          properties:
+            status:
+              type: integer
+              example: 200
+            message:
+              type: string
+              example: Successfully found contacts!
+            data:
+              type: array
+              items:
+                $ref: '../../components/schemas/Contact.yaml'
+            pagination:
+              type: object
+              properties:
+                page:
+                  type: integer
+                  example: 1
+                perPage:
+                  type: integer
+                  example: 20
+                totalItems:
+                  type: integer
+                  example: 100
+                totalPages:
+                  type: integer
+                  example: 5
   '401':
     $ref: '../../components/responses/Unauthorized.yaml'

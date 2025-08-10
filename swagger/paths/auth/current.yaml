@@ -11,6 +11,19 @@ responses:
     content:
       application/json:
         schema:
-          $ref: '../../components/schemas/User.yaml'
+          type: object
+          required:
+            - status
+            - message
+            - data
+          properties:
+            status:
+              type: integer
+              example: 200
+            message:
+              type: string
+              example: Successfully retrieved user!
+            data:
+              $ref: '../../components/schemas/User.yaml'
   '401':
     $ref: '../../components/responses/Unauthorized.yaml'

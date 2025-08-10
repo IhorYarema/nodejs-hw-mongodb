@@ -18,11 +18,25 @@ responses:
       application/json:
         schema:
           type: object
+          required:
+            - status
+            - message
+            - data
           properties:
-            token:
+            status:
+              type: integer
+              example: 200
+            message:
               type: string
-            user:
-              $ref: '../../components/schemas/User.yaml'
+              example: Successfully logged in an user!
+            data:
+              type: object
+              properties:
+                accessToken:
+                  type: string
+                  example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+                user:
+                  $ref: '../../components/schemas/User.yaml'
   '400':
     $ref: '../../components/responses/ValidationError.yaml'
   '401':

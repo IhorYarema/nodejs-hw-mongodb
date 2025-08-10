@@ -17,8 +17,57 @@ responses:
     content:
       application/json:
         schema:
-          $ref: '../../../components/schemas/Contact.yaml'
+          type: object
+          required:
+            - status
+            - message
+            - data
+          properties:
+            status:
+              type: integer
+              example: 200
+            message:
+              type: string
+              example: Successfully found contact with id 123
+            data:
+              $ref: '../../../components/schemas/Contact.yaml'
   '404':
-    $ref: '../../../components/responses/NotFound.yaml'
+    description: Contact not found
+    content:
+      application/json:
+        schema:
+          type: object
+          required:
+            - status
+            - message
+            - data
+          properties:
+            status:
+              type: integer
+              example: 404
+            message:
+              type: string
+              example: Contact not found
+            data:
+              type: object
+              description: Details about the error (optional)
   '401':
-    $ref: '../../../components/responses/Unauthorized.yaml'
+    description: Unauthorized
+    content:
+      application/json:
+        schema:
+          type: object
+          required:
+            - status
+            - message
+            - data
+          properties:
+            status:
+              type: integer
+              example: 401
+            message:
+              type: string
+              example: Unauthorized
+            data:
+              type: object
+              description: Details about the error (optional)
