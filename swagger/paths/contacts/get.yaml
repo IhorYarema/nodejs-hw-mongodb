@@ -21,13 +21,14 @@ parameters:
       type: integer
       minimum: 1
       maximum: 100
-      default: 20
+      default: 10
     description: Number of contacts per page.
   - name: sortBy
     in: query
     required: false
     schema:
       type: string
+      example: createdAt
     description: Field name to sort by.
   - name: sortOrder
     in: query
@@ -37,12 +38,19 @@ parameters:
       enum: [asc, desc]
       default: asc
     description: Sorting order.
-  - name: favorite
+  - name: isFavourite
     in: query
     required: false
     schema:
       type: boolean
-    description: Filter by favorite contacts (true or false).
+    description: Filter by favourite contacts (true or false).
+  - name: contactType
+    in: query
+    required: false
+    schema:
+      type: string
+      enum: [work, home, personal]
+    description: Filter by contact type.
 responses:
   '200':
     description: Paginated list of contacts
@@ -50,10 +58,6 @@ responses:
       application/json:
         schema:
           type: object
-          required:
-            - status
-            - message
-            - data
           properties:
             status:
               type: integer
@@ -63,14 +67,6 @@ responses:
               example: Successfully found contacts!
             data:
               type: object
-              required:
-                - data
-                - page
-                - perPage
-                - totalItems
-                - totalPages
-                - hasNextPage
-                - hasPreviousPage
               properties:
                 data:
                   type: array
@@ -81,13 +77,13 @@ responses:
                   example: 1
                 perPage:
                   type: integer
-                  example: 20
+                  example: 10
                 totalItems:
                   type: integer
-                  example: 100
+                  example: 5
                 totalPages:
                   type: integer
-                  example: 5
+                  example: 1
                 hasNextPage:
                   type: boolean
                   example: false

@@ -1,5 +1,19 @@
-description: Unauthorized - invalid or missing token
+description: Unauthorized
 content:
   application/json:
     schema:
-      $ref: '../schemas/Error.yaml'
+      type: object
+      required:
+        - status
+        - message
+        - data
+      properties:
+        status:
+          type: integer
+          example: 401
+        message:
+          type: string
+          example: Unauthorized
+        data:
+          type: object
+          example: {}

@@ -26,7 +26,9 @@ properties:
     type: string
     example: 66b8bfec645d7da6a56fba5d
   photo:
-    type: string
+    oneOf:
+      - type: string
+      - type: 'null'
     example: uploads/john-doe.jpg
   createdAt:
     type: string

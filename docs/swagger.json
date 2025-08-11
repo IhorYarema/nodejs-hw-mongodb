@@ -11,10 +11,12 @@
   },
   "servers": [
     {
-      "url": "http://localhost:3000"
+      "url": "http://localhost:3000",
+      "description": "Local development server"
     },
     {
-      "url": "https://nodejs-hw-mongodb-k4lk.onrender.com"
+      "url": "https://nodejs-hw-mongodb-k4lk.onrender.com",
+      "description": "Production server"
     }
   ],
   "tags": [
@@ -57,7 +59,25 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Contact"
+                  "type": "object",
+                  "required": [
+                    "status",
+                    "message",
+                    "data"
+                  ],
+                  "properties": {
+                    "status": {
+                      "type": "integer",
+                      "example": 200
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Successfully found contact!"
+                    },
+                    "data": {
+                      "$ref": "#/components/schemas/Contact"
+                    }
+                  }
                 }
               }
             }
@@ -97,27 +117,7 @@
           "content": {
             "multipart/form-data": {
               "schema": {
-                "type": "object",
-                "properties": {
-                  "name": {
-                    "type": "string",
-                    "example": "Jane Doe"
-                  },
-                  "email": {
-                    "type": "string",
-                    "format": "email",
-                    "example": "jane@example.com"
-                  },
-                  "phone": {
-                    "type": "string",
-                    "example": "+1-202-555-0178"
-                  },
-                  "photo": {
-                    "type": "string",
-                    "format": "binary",
-                    "description": "New contact profile picture"
-                  }
-                }
+                "$ref": "#/components/schemas/ContactUpdateRequest"
               }
             }
           }
@@ -128,10 +128,29 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Contact"
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "integer",
+                      "example": 200
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Contact successfully updated"
+                    },
+                    "data": {
+                      "$ref": "#/components/schemas/Contact"
+                    }
+                  }
                 }
               }
             }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
           },
           "404": {
             "$ref": "#/components/responses/NotFound"
@@ -168,9 +187,17 @@
                 "schema": {
                   "type": "object",
                   "properties": {
+                    "status": {
+                      "type": "integer",
+                      "example": 200
+                    },
                     "message": {
                       "type": "string",
-                      "example": "Contact deleted successfully"
+                      "example": "Contact successfully deleted"
+                    },
+                    "data": {
+                      "type": "null",
+                      "example": null
                     }
                   }
                 }
@@ -219,7 +246,7 @@
               "type": "integer",
               "minimum": 1,
               "maximum": 100,
-              "default": 20
+              "default": 10
             },
             "description": "Number of contacts per page."
           },
@@ -228,7 +255,8 @@
             "in": "query",
             "required": false,
             "schema": {
-              "type": "string"
+              "type": "string",
+              "example": "createdAt"
             },
             "description": "Field name to sort by."
           },
@@ -247,13 +275,27 @@
             "description": "Sorting order."
           },
           {
-            "name": "favorite",
+            "name": "isFavourite",
             "in": "query",
             "required": false,
             "schema": {
               "type": "boolean"
             },
-            "description": "Filter by favorite contacts (true or false)."
+            "description": "Filter by favourite contacts (true or false)."
+          },
+          {
+            "name": "contactType",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "work",
+                "home",
+                "personal"
+              ]
+            },
+            "description": "Filter by contact type."
           }
         ],
         "responses": {
@@ -262,7 +304,52 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/PaginatedResponse"
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "integer",
+                      "example": 200
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Successfully found contacts!"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "data": {
+                          "type": "array",
+                          "items": {
+                            "$ref": "#/components/schemas/Contact"
+                          }
+                        },
+                        "page": {
+                          "type": "integer",
+                          "example": 1
+                        },
+                        "perPage": {
+                          "type": "integer",
+                          "example": 10
+                        },
+                        "totalItems": {
+                          "type": "integer",
+                          "example": 5
+                        },
+                        "totalPages": {
+                          "type": "integer",
+                          "example": 1
+                        },
+                        "hasNextPage": {
+                          "type": "boolean",
+                          "example": false
+                        },
+                        "hasPreviousPage": {
+                          "type": "boolean",
+                          "example": false
+                        }
+                      }
+                    }
+                  }
                 }
               }
             }
@@ -289,27 +376,7 @@
           "content": {
             "multipart/form-data": {
               "schema": {
-                "type": "object",
-                "properties": {
-                  "name": {
-                    "type": "string",
-                    "example": "John Doe"
-                  },
-                  "email": {
-                    "type": "string",
-                    "format": "email",
-                    "example": "john@example.com"
-                  },
-                  "phone": {
-                    "type": "string",
-                    "example": "+1-202-555-0147"
-                  },
-                  "photo": {
-                    "type": "string",
-                    "format": "binary",
-                    "description": "Contact profile picture"
-                  }
-                }
+                "$ref": "#/components/schemas/ContactCreateRequest"
               }
             }
           }
@@ -320,13 +387,29 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Contact"
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "integer",
+                      "example": 201
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Contact successfully created"
+                    },
+                    "data": {
+                      "$ref": "#/components/schemas/Contact"
+                    }
+                  }
                 }
               }
             }
           },
           "400": {
             "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
           }
         }
       }
@@ -360,7 +443,25 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/User"
+                  "type": "object",
+                  "required": [
+                    "status",
+                    "message",
+                    "data"
+                  ],
+                  "properties": {
+                    "status": {
+                      "type": "integer",
+                      "example": 201
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "User registered successfully"
+                    },
+                    "data": {
+                      "$ref": "#/components/schemas/User"
+                    }
+                  }
                 }
               }
             }
@@ -373,7 +474,21 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Error"
+                  "type": "object",
+                  "required": [
+                    "status",
+                    "message"
+                  ],
+                  "properties": {
+                    "status": {
+                      "type": "integer",
+                      "example": 409
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Email already exists"
+                    }
+                  }
                 }
               }
             }
@@ -411,12 +526,31 @@
               "application/json": {
                 "schema": {
                   "type": "object",
+                  "required": [
+                    "status",
+                    "message",
+                    "data"
+                  ],
                   "properties": {
-                    "token": {
-                      "type": "string"
+                    "status": {
+                      "type": "integer",
+                      "example": 200
                     },
-                    "user": {
-                      "$ref": "#/components/schemas/User"
+                    "message": {
+                      "type": "string",
+                      "example": "Successfully logged in an user!"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "accessToken": {
+                          "type": "string",
+                          "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+                        },
+                        "user": {
+                          "$ref": "#/components/schemas/User"
+                        }
+                      }
                     }
                   }
                 }
@@ -474,7 +608,25 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/User"
+                  "type": "object",
+                  "required": [
+                    "status",
+                    "message",
+                    "data"
+                  ],
+                  "properties": {
+                    "status": {
+                      "type": "integer",
+                      "example": 200
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Successfully retrieved user!"
+                    },
+                    "data": {
+                      "$ref": "#/components/schemas/User"
+                    }
+                  }
                 }
               }
             }
@@ -532,7 +684,14 @@
             "example": "66b8bfec645d7da6a56fba5d"
           },
           "photo": {
-            "type": "string",
+            "oneOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
             "example": "uploads/john-doe.jpg"
           },
           "createdAt": {
@@ -557,59 +716,81 @@
           "updatedAt"
         ]
       },
-      "Error": {
+      "ContactUpdateRequest": {
         "type": "object",
         "properties": {
-          "message": {
+          "name": {
             "type": "string",
-            "example": "An error occurred"
+            "example": "Jane Doe"
+          },
+          "phoneNumber": {
+            "type": "string",
+            "example": "+1-202-555-0178"
+          },
+          "email": {
+            "type": "string",
+            "format": "email",
+            "example": "jane@example.com"
+          },
+          "isFavourite": {
+            "type": "boolean",
+            "example": true
+          },
+          "contactType": {
+            "type": "string",
+            "enum": [
+              "work",
+              "home",
+              "personal"
+            ],
+            "example": "work"
+          },
+          "photo": {
+            "type": "string",
+            "format": "binary",
+            "description": "New contact profile picture (optional)"
           }
         }
       },
-      "PaginatedResponse": {
+      "ContactCreateRequest": {
         "type": "object",
         "properties": {
-          "status": {
-            "type": "integer",
-            "example": 200
-          },
-          "message": {
+          "name": {
             "type": "string",
-            "example": "Successfully found contacts!"
+            "example": "John Doe"
           },
-          "data": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/Contact"
-            }
+          "phoneNumber": {
+            "type": "string",
+            "example": "+1-202-555-0147"
           },
-          "pagination": {
-            "type": "object",
-            "properties": {
-              "page": {
-                "type": "integer",
-                "example": 1
-              },
-              "perPage": {
-                "type": "integer",
-                "example": 20
-              },
-              "totalItems": {
-                "type": "integer",
-                "example": 100
-              },
-              "totalPages": {
-                "type": "integer",
-                "example": 5
-              }
-            }
+          "email": {
+            "type": "string",
+            "format": "email",
+            "example": "john@example.com"
+          },
+          "isFavourite": {
+            "type": "boolean",
+            "example": false
+          },
+          "contactType": {
+            "type": "string",
+            "enum": [
+              "work",
+              "home",
+              "personal"
+            ],
+            "example": "personal"
+          },
+          "photo": {
+            "type": "string",
+            "format": "binary",
+            "description": "Contact profile picture (optional)"
           }
         },
         "required": [
-          "status",
-          "message",
-          "data",
-          "pagination"
+          "name",
+          "phoneNumber",
+          "contactType"
         ]
       },
       "RegisterInput": {
@@ -617,6 +798,7 @@
         "properties": {
           "email": {
             "type": "string",
+            "format": "email",
             "example": "user@example.com"
           },
           "password": {
@@ -638,6 +820,7 @@
           },
           "email": {
             "type": "string",
+            "format": "email",
             "example": "user@example.com"
           },
           "subscription": {
@@ -661,6 +844,7 @@
         "properties": {
           "email": {
             "type": "string",
+            "format": "email",
             "example": "user@example.com"
           },
           "password": {
@@ -676,21 +860,59 @@
     },
     "responses": {
       "Unauthorized": {
-        "description": "Unauthorized - invalid or missing token",
+        "description": "Unauthorized",
         "content": {
           "application/json": {
             "schema": {
-              "$ref": "#/components/schemas/Error"
+              "type": "object",
+              "required": [
+                "status",
+                "message",
+                "data"
+              ],
+              "properties": {
+                "status": {
+                  "type": "integer",
+                  "example": 401
+                },
+                "message": {
+                  "type": "string",
+                  "example": "Unauthorized"
+                },
+                "data": {
+                  "type": "object",
+                  "example": {}
+                }
+              }
             }
           }
         }
       },
       "NotFound": {
-        "description": "Resource not found",
+        "description": "Not Found",
         "content": {
           "application/json": {
             "schema": {
-              "$ref": "#/components/schemas/Error"
+              "type": "object",
+              "required": [
+                "status",
+                "message",
+                "data"
+              ],
+              "properties": {
+                "status": {
+                  "type": "integer",
+                  "example": 404
+                },
+                "message": {
+                  "type": "string",
+                  "example": "Resource not found"
+                },
+                "data": {
+                  "type": "object",
+                  "example": {}
+                }
+              }
             }
           }
         }
@@ -701,6 +923,11 @@
           "application/json": {
             "schema": {
               "type": "object",
+              "required": [
+                "status",
+                "message",
+                "data"
+              ],
               "properties": {
                 "status": {
                   "type": "integer",
@@ -708,7 +935,12 @@
                 },
                 "message": {
                   "type": "string",
-                  "example": "Bad request"
+                  "example": "Bad Request"
+                },
+                "data": {
+                  "type": "object",
+                  "description": "Validation details or error payload",
+                  "example": {}
                 }
               }
             }
@@ -721,15 +953,30 @@
           "application/json": {
             "schema": {
               "type": "object",
+              "required": [
+                "status",
+                "message",
+                "data"
+              ],
               "properties": {
+                "status": {
+                  "type": "integer",
+                  "example": 400
+                },
                 "message": {
                   "type": "string",
                   "example": "Validation failed"
                 },
-                "errors": {
-                  "type": "array",
-                  "items": {
-                    "type": "string"
+                "data": {
+                  "type": "object",
+                  "description": "Details about validation errors",
+                  "properties": {
+                    "errors": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    }
                   }
                 }
               }

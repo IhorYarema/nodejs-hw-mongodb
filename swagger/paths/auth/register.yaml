@@ -17,7 +17,20 @@ responses:
     content:
       application/json:
         schema:
-          $ref: '../../components/schemas/User.yaml'
+          type: object
+          required:
+            - status
+            - message
+            - data
+          properties:
+            status:
+              type: integer
+              example: 201
+            message:
+              type: string
+              example: User registered successfully
+            data:
+              $ref: '../../components/schemas/User.yaml'
   '400':
     $ref: '../../components/responses/ValidationError.yaml'
   '409':
@@ -25,4 +38,14 @@ responses:
     content:
       application/json:
         schema:
-          $ref: '../../components/schemas/Error.yaml'
+          type: object
+          required:
+            - status
+            - message
+          properties:
+            status:
+              type: integer
+              example: 409
+            message:
+              type: string
+              example: Email already exists

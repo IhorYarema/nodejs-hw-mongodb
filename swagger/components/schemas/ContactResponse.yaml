@@ -1,0 +1,14 @@
+type: object
+required:
+  - status
+  - message
+  - data
+properties:
+  status:
+    type: integer
+    example: 200
+  message:
+    type: string
+    example: Successfully processed contact!
+  data:
+    $ref: './Contact.yaml'

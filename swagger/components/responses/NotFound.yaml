@@ -1,5 +1,19 @@
-description: Resource not found
+description: Not Found
 content:
   application/json:
     schema:
-      $ref: '../schemas/Error.yaml'
+      type: object
+      required:
+        - status
+        - message
+        - data
+      properties:
+        status:
+          type: integer
+          example: 404
+        message:
+          type: string
+          example: Resource not found
+        data:
+          type: object
+          example: {}

@@ -1,4 +1,9 @@
 type: object
+required:
+  - status
+  - message
+  - data
+  - pagination
 properties:
   status:
     type: integer
@@ -12,21 +17,29 @@ properties:
       $ref: './Contact.yaml'
   pagination:
     type: object
+    required:
+      - page
+      - perPage
+      - totalItems
+      - totalPages
+      - hasNextPage
+      - hasPreviousPage
     properties:
       page:
         type: integer
         example: 1
       perPage:
         type: integer
-        example: 20
+        example: 10
       totalItems:
         type: integer
         example: 100
       totalPages:
         type: integer
-        example: 5
-required:
-  - status
-  - message
-  - data
-  - pagination
+        example: 10
+      hasNextPage:
+        type: boolean
+        example: true
+      hasPreviousPage:
+        type: boolean
+        example: false
